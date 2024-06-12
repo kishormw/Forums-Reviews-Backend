@@ -20,6 +20,10 @@ const dynamicDateEnd = currentTimestamp;
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.json({message: 'Yes! Finally you can see me!!'});
+});
+
 app.use(cors({
     origin: process.env.ALLOWED_ORIGIN,
     methods: ['GET', 'POST'],
