@@ -5,7 +5,7 @@ const request = require('request');
 const axios = require("axios");
 const dotenv = require("dotenv").config();
 const { getToken } = require("./getToken");
-const { updateToken } = require("./refreshToken");
+const { updateToken } = require("./updateToken");
 
 let PORT = process.env.ListenPort;
 
