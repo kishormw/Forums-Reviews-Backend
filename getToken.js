@@ -1,32 +1,19 @@
 const axios = require('axios');
-const fs = require('fs');
-const { updateToken } = require('./updateToken');
+let tokenData = null;
 
 async function getToken() {
-    let token;
-    try {
-        token = require('./token.json');
-        if (JSON.stringify(token).length < 20) {
-            token = false;
-        } else {
-            const tokenPayload = JSON.parse(Buffer.from(token.token.split('.')[1], 'base64').toString());
-            if (tokenPayload.exp * 1000 > Date.now()) {
-                //console.log("Token reused");
-                return [token.token, false];
-            } else {
-                token = false;
-            }
+    if (tokenData) {
+        const tokenPayload = JSON.parse(Buffer.from(tokenData.split('.')[1], 'base64').toString());
+        if (tokenPayload.exp * 1000 > Date.now()) {
+            // Token is still valid
+            return [tokenData, false];
         }
-    } catch (e) {
-        token = false;
     }
 
-    if (!token) {
-        //console.log("Creating new token");
-        token = await login();
-        if (!token) return false;
-        return [token, true];
-    }
+    // Token is not valid or doesn't exist, create a new one
+    tokenData = await login();
+    if (!tokenData) return false;
+    return [tokenData, true];
 }
 
 async function login() {
@@ -40,10 +27,9 @@ async function login() {
 
         const result = await axios.request(options);
         if (!result.data.success) return false;
-        updateToken(result.data.token)
         return result.data.token;
     } catch (e) {
-        console.log("Failed to generate token");
+        console.log("Failed to generate token", e);
         return false;
     }
 }

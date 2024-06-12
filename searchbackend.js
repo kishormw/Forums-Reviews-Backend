@@ -36,15 +36,28 @@ app.listen(PORT, () => {
 });
 
 //Token function
+// async function fetchToken() {
+//     let token;
+//     let isNewToken;
+
+//     try {
+//         [token, isNewToken] = await getToken();
+//         if (isNewToken) {
+//             await updateToken(token);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching token:', error);
+//         return null;
+//     }
+
+//     return token;
+// }
 async function fetchToken() {
     let token;
     let isNewToken;
 
     try {
         [token, isNewToken] = await getToken();
-        if (isNewToken) {
-            await updateToken(token);
-        }
     } catch (error) {
         console.error('Error fetching token:', error);
         return null;
