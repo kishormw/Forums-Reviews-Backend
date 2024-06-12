@@ -1,6 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
-const { updateToken } = require('./refreshToken');
+const { updateToken } = require('./updateToken');
 
 async function getToken() {
     let token;
