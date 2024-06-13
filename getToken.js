@@ -11,7 +11,6 @@ async function getToken() {
         } else {
             const tokenPayload = JSON.parse(Buffer.from(token.token.split('.')[1], 'base64').toString());
             if (tokenPayload.exp * 1000 > Date.now()) {
-                //console.log("Token reused");
                 return [token.token, false];
             } else {
                 token = false;
@@ -22,9 +21,9 @@ async function getToken() {
     }
 
     if (!token) {
-        //console.log("Creating new token");
         token = await login();
         if (!token) return false;
+        await updateToken(token);
         return [token, true];
     }
 }
@@ -40,7 +39,6 @@ async function login() {
 
         const result = await axios.request(options);
         if (!result.data.success) return false;
-        updateToken(result.data.token)
         return result.data.token;
     } catch (e) {
         console.log("Failed to generate token");
