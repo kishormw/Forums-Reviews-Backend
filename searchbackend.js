@@ -761,6 +761,7 @@ let userDetails = {};
 
 // login user email address
 app.post('/logindetails', (req, res) => {
+    res.json({message: 'I Can See login Now💀'});
     const mail = req.body.Mail;
     const Username = req.body.Username;
     userDetails.mail = mail;
