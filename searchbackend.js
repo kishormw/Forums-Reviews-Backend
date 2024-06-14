@@ -20,9 +20,13 @@ const dynamicDateEnd = currentTimestamp;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.json({message: 'Yes! Finally you can see me!!'});
-});
+// Your API key for Webhose.IO
+const webhoseApiKey = "2e7eabff-a926-4e97-b323-10cf483b542a";
+
+// Function to calculate timestamp for 30 days ago in epoch time
+function getThirtyDaysAgoTimestamp() {
+    return new Date().getTime() - (30 * 24 * 60 * 60 * 1000);
+}
 
 app.use(cors({
     origin: process.env.ALLOWED_ORIGIN,
@@ -36,25 +40,10 @@ app.listen(PORT, () => {
 });
 
 //Token function
-// async function fetchToken() {
-//     let token;
-//     let isNewToken;
-
-//     try {
-//         [token, isNewToken] = await getToken();
-//         if (isNewToken) {
-//             await updateToken(token);
-//         }
-//     } catch (error) {
-//         console.error('Error fetching token:', error);
-//         return null;
-//     }
-
-//     return token;
-// }
-
 async function fetchToken() {
     let token;
+    let isNewToken;
+
     try {
         [token, isNewToken] = await getToken();
         if (isNewToken) {
@@ -67,9 +56,6 @@ async function fetchToken() {
 
     return token;
 }
-
-module.exports = { fetchToken };
-
 
 
 // Forum Endpoints.
@@ -108,9 +94,7 @@ app.post('/forumscheck', async (req, res) => {
                         filter: {
                             type: 'CUSTOM',
                             filters: {
-                               
                                 sourceType: ['social_message_boards'],
-                                
                                 twitter: {
                                     likes: {},
                                     gender: [],
@@ -140,7 +124,7 @@ app.post('/forumscheck', async (req, res) => {
             },
             json: true
         };
-        
+
         const options2 = {
             method: 'POST',
             url: 'https://af.meltwater.io/data/runes',
@@ -160,7 +144,6 @@ app.post('/forumscheck', async (req, res) => {
             },
             json: true
         };
-
 
         const options3 = {
             method: 'POST',
@@ -291,7 +274,8 @@ app.post('/forumscheck', async (req, res) => {
                 return res.status(500).send('Internal Server Error');
             }
 
-            if (body["AF-mentionsStatsTrendPredictive"]["compoundWidgetData"]["AF-totalMentions"]["number"] === 0) {
+            const mentionsStats = body["AF-mentionsStatsTrendPredictive"]["compoundWidgetData"]["AF-totalMentions"]["number"];
+            if (mentionsStats === 0) {
                 const hasSlash = /\/+/.test(forumurl);
                 if (hasSlash) {
                     console.log("No results found");
@@ -304,14 +288,12 @@ app.post('/forumscheck', async (req, res) => {
                         getToken(forumurl);
                     }
                 } else {
-                    console.log("Results not found");
-                    return res.send("Results not found");
-
+                    console.log("Results not found and its here!!");
+                    checkWebhose(forumurl, res); // Check with Webhose if no results found in Meltwater
                 }
             } else {
                 console.log("Results found");
                 const documents = body['AF-resultListSorted'].documents;
-                // console.log("here: ", forumurl);
                 const updatedDocuments = documents.map(document => {
                     return {
                         originalUrl: document.originalUrl,
@@ -327,6 +309,46 @@ app.post('/forumscheck', async (req, res) => {
         });
     }
 });
+
+function checkWebhose(forumurl, res) {
+    const thirtyDaysAgo = getThirtyDaysAgoTimestamp();
+    const webhoseEndpoint = `https://api.webz.io/filterWebContent?token=${webhoseApiKey}&format=json&ts=${thirtyDaysAgo}&sort=crawled&q=site%3A${encodeURIComponent(forumurl)}%20AND%20site_type%3A%22Discussions%22`;
+
+    const options = {
+        method: 'GET',
+        url: webhoseEndpoint,
+        headers: {}
+    };
+
+    request(options, function (error, response) {
+        if (error) {
+            console.error('Error in Webhose request:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        const responseData = JSON.parse(response.body);
+        const totalResults = responseData.totalResults;
+        const requestsLeft = response.headers['x-webhose-requests-left'];
+
+        console.log(`Webhose - Total Results: ${totalResults}`);
+        console.log(`Webhose - Requests Left: ${requestsLeft}`);
+
+        if (totalResults > 0) {
+            return res.json({
+                source: 'Webhose',
+                totalResults: totalResults,
+                results: responseData.posts, // Or however the results are structured in the response
+                webhoseUsed: true // Add a flag to indicate Webhose was used
+            });
+        } else {
+            return res.json({
+                source: 'Webhose',
+                totalResults: totalResults,
+                webhoseUsed: true // Add a flag to indicate Webhose was used
+            });
+        }
+    });
+}
 
 
 
@@ -543,10 +565,10 @@ app.post('/reviewskeywords', async (req, res) => {
     if (!token) {
         return res.status(500).send('Failed to fetch token');
     }
-    else {
+    else{
         getToken(reviewurl, reviewwords);
     }
-
+    
     function getToken(reviewurl, reviewwords) {
         const options1 = {
             method: 'POST',
@@ -807,7 +829,7 @@ app.post('/forumticket', (req, res) => {
                     "reporter": {
                         "self": `${process.env.API_BASE_URL}/rest/api/3/user?accountId= ${accountId}`,
                         "accountId": accountId,
-                        "emailAddress": email,
+                        "emailAddress": email, 
                         "avatarUrls": {
                             "48x48": "https://secure.gravatar.com/avatar/5fb9ca4a8f36c77dfb2119acdbc6bc22?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FSC-3.png",
                             "24x24": "https://secure.gravatar.com/avatar/5fb9ca4a8f36c77dfb2119acdbc6bc22?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FSC-3.png",
