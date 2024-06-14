@@ -27,8 +27,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: 'Forify-nodejs'
-          environment_name: 'Forify-nodejs-env'
+          application_name: 'forify-nodejs-app'
+          environment_name: 'Forify-nodejs-app-env'
           version_label: ${{ github.sha }}
           region: eu-west-1
           deployment_package: Forums-Reviews-Backend-build.zip
