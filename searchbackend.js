@@ -20,6 +20,10 @@ const dynamicDateEnd = currentTimestamp;
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.json({message: 'I Can See You Now💀'});
+});
+
 // Your API key for Webhose.IO
 const webhoseApiKey = "2e7eabff-a926-4e97-b323-10cf483b542a";
 
