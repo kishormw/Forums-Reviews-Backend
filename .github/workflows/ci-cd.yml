@@ -25,10 +25,10 @@ jobs:
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }} #Create a IAM user and download the creds and with the same name added them to the security variables in git.
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: 'mynodejs_app'
-          environment_name: 'Mynodejsapp-env '
+          application_name: 'mynodejs_app' #Change this with respect to AWS EBS you are using.
+          environment_name: 'Mynodejsapp-env ' #Change this with respect to AWS EBS you are using.
           version_label: ${{ github.sha }}
           region: eu-west-1
           deployment_package: Forums-Reviews-Backend-build.zip
