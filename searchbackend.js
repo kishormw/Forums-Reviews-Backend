@@ -20,6 +20,7 @@ const dynamicDateEnd = currentTimestamp;
 
 app.use(express.json());
 
+//Base route
 app.get('/', (req, res) => {
     res.json({message: 'I Can See You Now💀'});
 });
@@ -32,6 +33,7 @@ function getThirtyDaysAgoTimestamp() {
     return new Date().getTime() - (30 * 24 * 60 * 60 * 1000);
 }
 
+//Cors for allow origins.
 app.use(cors({
     origin: process.env.ALLOWED_ORIGIN,
     methods: ['GET', 'POST'],
@@ -43,7 +45,7 @@ app.listen(PORT, () => {
     console.log('Server is running on port ', PORT);
 });
 
-//Token function
+//Token function and the gettokens and updatetoken files are created already.
 async function fetchToken() {
     let token;
     let isNewToken;
