@@ -788,7 +788,7 @@ app.post('/forumticket', (req, res) => {
         'url': `${baseUrl}/rest/api/3/user/search?query=${email}`,
         'headers': {
             'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-            'Cookie': 'atlassian.xsrf.token=6aa3f8fb144c5fff4c660b84b1f67e08e12e5e08_lin'
+            'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
         }
     };
     //'Basic ZGlzaGFudGgucEBtZWx0d2F0ZXIuY29tOkFUQVRUM3hGZkdGMGloSHdqUElRSW9INW1RU2pObDBtZHNYQnRjenN0NEl4bWhBeE1Gazk1ZnV4YnBNU2tQTnM2WmdldV9ySmp1cm5pNVBYZVNwOW02VUR0RzVzLVc5N0p0TnFPOE0yTTVoVnYxU2RvTVZza1dUVGlLS3ExVE1HVDAxWEtLcEhUZlYtUkNKVlZoVUVoOVZ4SUYyLXpDMFJhNHFydEVXRHJxSnV1QW02V0ZGTzRwND1BRTBFNzE4Mg=='
@@ -807,7 +807,7 @@ app.post('/forumticket', (req, res) => {
             'headers': {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-                'Cookie': 'atlassian.xsrf.token=608805bbba719ff20921582c7620208e84958ceb_lin'
+                'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
             },
             body: JSON.stringify({
                 "fields": {
@@ -972,7 +972,7 @@ app.post('/reviewticket', (req, res) => {
         'url': `https://meltwater.atlassian.net/rest/api/3/user/search?query=${email}`,
         'headers': {
             'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-            'Cookie': 'atlassian.xsrf.token=6aa3f8fb144c5fff4c660b84b1f67e08e12e5e08_lin'
+            'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
         }
     };
     request(accid, function (error, response) {
@@ -989,7 +989,7 @@ app.post('/reviewticket', (req, res) => {
             'headers': {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-                'Cookie': 'atlassian.xsrf.token=608805bbba719ff20921582c7620208e84958ceb_lin'
+                'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
             },
             body: JSON.stringify({
                 "fields": {
@@ -1149,7 +1149,7 @@ app.get('/gettickets', (req, res) => {
         'url': `https://meltwater.atlassian.net/rest/api/3/user/search?query=${email}`,
         'headers': {
             'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-            'Cookie': 'atlassian.xsrf.token=6aa3f8fb144c5fff4c660b84b1f67e08e12e5e08_lin'
+            'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
         }
     };
     request(accid, function (error, response) {
@@ -1165,7 +1165,7 @@ app.get('/gettickets', (req, res) => {
             'url': `https://meltwater.atlassian.net/rest/api/3/search?jql=reporter=${accountId}`,
             'headers': {
                 'Authorization': `Basic ${process.env.BASIC_TOKEN}==`,
-                'Cookie': 'atlassian.xsrf.token=78e751d73d45dcb1583c0051e6290c5fce218144_lin'
+                'Cookie': 'atlassian.xsrf.token=9b91edf25c1d0070c8abb0f8513a3e0ce9758680_lin'
             }
         };
         request(ticketskey, function (error, response) {
